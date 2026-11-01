@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome</title>
+  <link rel="stylesheet" href="../css/auth.css" />
+</head>
+<body>
+  <div class="auth-container">
+    <section class="left-panel">
+      <div class="left-content">
+        <h1>Secure your account</h1>
+        <p>Create your account and set up your graphical authentication methods.</p>
+        <a href="signin.html" class="switch-btn">Sign In</a>
+      </div>
+    </section>
+
+    <section class="right-panel">
+      <div class="form-box">
+        <h2>Create Account</h2>
+        <p class="form-subtitle">Enter your details to begin setting up your graphical password methods.</p>
+        <form id="signupEntryForm">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required />
+
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" required />
+
+          <button type="submit" class="primary-btn">Sign Up</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="../js/pages/index.js"></script>
+</body>
+</html>

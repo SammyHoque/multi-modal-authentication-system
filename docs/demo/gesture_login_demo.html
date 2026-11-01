@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Secure Gesture Password Demo (Fixed)</title>
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align:center; }
+    #webcam, #output_canvas {
+      width: 640px; height: 480px;
+      transform: scaleX(-1);
+    }
+    #status { margin-top:10px; font-size:1.1em; }
+    button { margin:8px; padding:10px 18px; }
+  </style>
+</head>
+<body>
+  <h1>Hand-Gesture Password (Hidden Recognition)</h1>
+  <p>Click <b>Enable Webcam</b> to start. Gestures are recognized but not displayed.</p>
+
+  <button id="webcamButton" class="mdc-button mdc-button--raised">
+    <span class="mdc-button__label">Enable Webcam</span>
+  </button>
+  <button id="recordBtn" class="mdc-button mdc-button--raised">Start Recording</button>
+  <button id="saveBtn" class="mdc-button mdc-button--raised">Save Password</button>
+  <button id="loginBtn" class="mdc-button mdc-button--raised">Check Login</button>
+
+  <div style="position:relative; display:inline-block;">
+    <video id="webcam" autoplay playsinline></video>
+    <canvas id="output_canvas" width="640" height="480"
+            style="position:absolute; left:0; top:0;"></canvas>
+  </div>
+
+  <p id="status">Waiting for webcam...</p>
+
+  <script type="module">
+    import {
+      GestureRecognizer,
+      FilesetResolver,
+      DrawingUtils
+    } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3";
+
+    const videoEl = document.getElementById("webcam");
+    const canvasEl = document.getElementById("output_canvas");
+    const ctx = canvasEl.getContext("2d");
+    const status = document.getElementById("status");
+    const webcamButton = document.getElementById("webcamButton");
+    const recordBtn = document.getElementById("recordBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const loginBtn = document.getElementById("loginBtn");
+
+    let gestureRecognizer;
+    let runningMode = "VIDEO";
+    let webcamRunning = false;
+    let lastTime = -1;
+
+    let recording = false;
+    let recordedGestures = [];
+    let latestAttempt = [];
+    let savedPassword = null;
+
+    // Initialize recognizer
+    async function initRecognizer() {
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
+      );
+      gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath:
+            "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+          delegate: "GPU"
+        },
+        runningMode
+      });
+      status.textContent = "Model loaded. Ready.";
+    }
+
+    // Webcam toggle
+    webcamButton.onclick = async () => {
+      if (!gestureRecognizer) await initRecognizer();
+
+      webcamRunning = !webcamRunning;
+      webcamButton.querySelector(".mdc-button__label").textContent =
+        webcamRunning ? "Disable Webcam" : "Enable Webcam";
+
+      if (webcamRunning) {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        videoEl.srcObject = stream;
+        videoEl.addEventListener("loadeddata", predict);
+      } else {
+        const stream = videoEl.srcObject;
+        if (stream) stream.getTracks().forEach(t => t.stop());
+      }
+    };
+
+    // Prediction loop
+    async function predict() {
+      if (!webcamRunning) return;
+      const now = Date.now();
+      if (videoEl.currentTime !== lastTime) {
+        lastTime = videoEl.currentTime;
+        const results = gestureRecognizer.recognizeForVideo(videoEl, now);
+
+        ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+        const draw = new DrawingUtils(ctx);
+        if (results.landmarks) {
+          for (const lm of results.landmarks) {
+            draw.drawConnectors(lm, GestureRecognizer.HAND_CONNECTIONS,
+              {color:"#00FF00", lineWidth:4});
+            draw.drawLandmarks(lm, {color:"#FF0000", lineWidth:2});
+          }
+        }
+
+        if (recording && results.gestures.length > 0) {
+          const gestureName = results.gestures[0][0].categoryName;
+          // avoid adding duplicate frames of same gesture repeatedly
+          if (recordedGestures[recordedGestures.length - 1] !== gestureName) {
+            recordedGestures.push(gestureName);
+          }
+        }
+      }
+      requestAnimationFrame(predict);
+    }
+
+    // Buttons for password logic
+    recordBtn.onclick = () => {
+      recordedGestures = [];
+      recording = true;
+      status.textContent = "Recording gesture sequence (3 seconds)...";
+      setTimeout(() => {
+        recording = false;
+        latestAttempt = recordedGestures.slice(); // save last attempt
+        status.textContent = `Recording stopped. Captured ${latestAttempt.length} gestures.`;
+      }, 3000);
+    };
+
+    saveBtn.onclick = () => {
+      if (latestAttempt.length === 0) {
+        status.textContent = "No gestures captured. Record first.";
+        return;
+      }
+      savedPassword = latestAttempt.slice();
+      status.textContent = `Password saved (${savedPassword.length} gestures).`;
+    };
+
+    loginBtn.onclick = () => {
+      if (!savedPassword) {
+        status.textContent = "No saved password yet.";
+        return;
+      }
+      if (latestAttempt.length === 0) {
+        status.textContent = "Record a new gesture first.";
+        return;
+      }
+
+      // Compare both sequences
+      const sameLength = savedPassword.length === latestAttempt.length;
+      const sameGestures = savedPassword.every((g, i) => g === latestAttempt[i]);
+      const match = sameLength && sameGestures;
+
+      status.textContent = match
+        ? "✅ Access Granted"
+        : "❌ Access Denied (Gesture sequence mismatch)";
+    };
+  </script>
+</body>
+</html>

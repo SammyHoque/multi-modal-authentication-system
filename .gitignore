@@ -1,0 +1,47 @@
+# macOS
+.DS_Store
+
+# Node.js
+node_modules/
+npm-debug.log*
+*.log
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Build files
+dist/
+build/
+coverage/
+
+# Sensitive data and database backups
+secrets/
+private-data/
+*.dump
+*.backup
+*.sql.gz
+
+# MediaPipe model files
+*.task
+
+# Research participant data - keep private
+docs/ethics/Completed_Feedback_Sheets/
+docs/ethics/Signed_Consent_Forms/
+
+# Personal university working documents
+docs/FYPSkillsLog_*.pdf
+
+# Backup and temporary files
+*.bkp
+
+# Private university and research documents
+docs/ethics/
+docs/Project_Plan_*

@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+  <main class="login-shell">
+    <section class="login-hero">
+      <p class="eyebrow">Authentication Check</p>
+      <h1>Log In</h1>
+      <p class="page-intro">Use your registered password methods to unlock your account.</p>
+    </section>
+
+    <section class="login-instructions">
+      <h3>How to Log In</h3>
+      <p>
+        Press <strong>Enable Webcam</strong> to begin authentication with your saved methods.
+      </p>
+      <p>
+        Use the progress panel on the right to see which methods are still waiting, in progress,
+        or complete.
+      </p>
+      <p>
+        Guidance messages below the webcam will help you through live checks like voice prompts
+        and Face ID.
+      </p>
+    </section>
+
+    <section class="login-panel">
+      <div class="controls">
+        <button id="enableCam" class="mdc-button mdc-button--raised">
+          <span class="mdc-button__label">Enable Webcam</span>
+        </button>
+      </div>
+
+      <div class="login-content">
+        <div class="login-main">
+          <div class="camera-frame" style="position:relative; display:inline-block;">
+            <video id="webcam" autoplay playsinline></video>
+            <canvas id="output_canvas" width="640" height="480"
+                    style="position:absolute; left:0; top:0;">
+            </canvas>
+          </div>
+
+          <p id="status">Waiting for webcam...</p>
+
+          <p id="voicePrompt" class="auth-prompt" style="display:none;"></p>
+
+          <p id="faceIdPrompt" class="auth-prompt" style="display:none;"></p>
+        </div>
+
+        <aside class="methods-panel">
+          <p class="methods-panel-label">Login Progress</p>
+          <h2>Required Methods</h2>
+          <p id="methodsSummary" class="methods-summary">Waiting for webcam...</p>
+
+          <div class="method-progress-list">
+            <div id="loginGestureCard" class="method-progress-card" hidden>
+              <p class="method-progress-name">Gesture</p>
+              <span id="loginGestureState" class="method-progress-state pending">Waiting</span>
+            </div>
+
+            <div id="loginFaceMotionCard" class="method-progress-card" hidden>
+              <p class="method-progress-name">Facial Motion</p>
+              <span id="loginFaceMotionState" class="method-progress-state pending">Waiting</span>
+            </div>
+
+            <div id="loginVoiceCard" class="method-progress-card" hidden>
+              <p class="method-progress-name">Voice</p>
+              <span id="loginVoiceState" class="method-progress-state pending">Waiting</span>
+            </div>
+
+            <div id="loginFaceIdCard" class="method-progress-card" hidden>
+              <p class="method-progress-name">Face ID</p>
+              <span id="loginFaceIdState" class="method-progress-state pending">Waiting</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="../js/pages/login.js"></script>
+
+</body>
+</html>

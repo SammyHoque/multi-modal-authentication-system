@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Register Password</title>
+  <link rel="stylesheet" href="../css/register.css">
+</head>
+<body>
+  <main class="register-shell">
+    <section class="register-hero">
+      <p class="eyebrow">Authentication Setup</p>
+      <h1>Register Password</h1>
+      <p class="page-intro">Set up the methods you want to use later for login verification.</p>
+    </section>
+
+    <section class="register-instructions">
+      <h3>How to Register</h3>
+      <p>
+        Select your desired authentication method(s) from the four options below.
+      </p>
+      <p>
+        Then press <strong>Enable Webcam</strong> and record your password.
+        Each method has <strong>3 seconds</strong> for recording.
+      </p>
+      <p>
+        The recording duration and completion status will be displayed below the camera screen.
+      </p>
+      <p>
+        Once all selected methods have been recorded successfully, press <strong>Save</strong>.
+      </p>
+      <p>
+        Detailed guidance for each selected method will appear below the options before the camera section.
+      </p>
+    </section>
+
+    <section class="register-panel">
+      <div class="options">
+        <label><input type="checkbox" id="optGesture"> Gesture</label>
+        <label><input type="checkbox" id="optFaceMotion"> Facial Motion</label>
+        <label><input type="checkbox" id="optVoice"> Voice</label>
+        <label><input type="checkbox" id="optFaceId"> Face ID</label>
+      </div>
+
+      <div class="method-instructions">
+        <h3>Method Guidance</h3>
+
+        <div class="instruction-box" id="gestureInstruction">
+          <h4>Gesture</h4>
+          <p>
+            Make a sequence of hand gestures within the 3 seconds of recording.
+            It is recommended to display your hand clearly in front of the webcam before starting.
+          </p>
+        </div>
+
+        <div class="instruction-box" id="faceMotionInstruction">
+          <h4>Facial Motion</h4>
+          <p>
+            Make a sequence of facial gestures such as opening your mouth, tilting your head,
+            or winking within 3 seconds of recording. It is recommended to show your face clearly.
+          </p>
+        </div>
+
+        <div class="instruction-box" id="voiceInstruction">
+          <h4>Voice</h4>
+          <p>
+            After selecting Voice, a text box will appear. Type your desired phrase or word.
+            Then, when recording starts, say the exact phrase within the 3 seconds of recording.
+            It is recommended to remember the tone of the recording.
+          </p>
+        </div>
+
+        <div class="instruction-box" id="faceIdInstruction">
+          <h4>Face ID</h4>
+          <p>
+            When recording, make sure your face is clear in the webcam and wait until the recording completes.
+          </p>
+        </div>
+      </div>
+
+      <div id="voiceBox">
+        <div class="voice-box-content">
+          <label for="voicePhrase" class="voice-phrase-label">Voice passphrase</label><br />
+          <input id="voicePhrase" type="text"
+                 placeholder="e.g. my voice is my password"
+                 />
+          <div class="voice-phrase-help">
+            You will need to say this exact phrase when logging in.
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <button id="enableCam" class="mdc-button mdc-button--raised">
+          <span class="mdc-button__label">Enable Webcam</span>
+        </button>
+        <button id="recordBtn" class="mdc-button mdc-button--raised">
+          <span class="mdc-button__label">Record Gesture</span>
+        </button>
+        <button id="recordFaceMotionBtn" class="mdc-button mdc-button--raised">
+          <span class="mdc-button__label">Record Facial Motion</span>
+        </button>
+        <button id="recordFaceIdBtn" class="mdc-button mdc-button--raised">
+          <span class="mdc-button__label">Record Face ID</span>
+        </button>
+        <button id="recordVoiceBtn" class="mdc-button mdc-button--raised" disabled>
+          <span class="mdc-button__label">Record Voice</span>
+        </button>
+      </div>
+
+      <div class="register-content">
+        <div class="register-main">
+          <div class="camera-frame" style="position:relative; display:inline-block;">
+            <video id="webcam" autoplay playsinline></video>
+            <canvas id="output_canvas" width="640" height="480" style="position:absolute; left:0; top:0;"></canvas>
+          </div>
+
+          <p id="status">Waiting for webcam...</p>
+          <p class="register-link"><a href="login.html">Go to Login ➜</a></p>
+        </div>
+
+        <aside class="register-progress-panel">
+          <p class="register-progress-label">Setup Progress</p>
+          <h2>Selected Methods</h2>
+          <p id="registerMethodsSummary" class="register-progress-summary">Choose the methods you want to record.</p>
+
+          <div class="register-progress-list">
+            <div id="registerGestureCard" class="register-progress-card">
+              <p class="register-progress-name">Gesture</p>
+              <span id="registerGestureState" class="register-progress-state pending">Waiting</span>
+            </div>
+
+            <div id="registerFaceMotionCard" class="register-progress-card">
+              <p class="register-progress-name">Facial Motion</p>
+              <span id="registerFaceMotionState" class="register-progress-state pending">Waiting</span>
+            </div>
+
+            <div id="registerVoiceCard" class="register-progress-card">
+              <p class="register-progress-name">Voice</p>
+              <span id="registerVoiceState" class="register-progress-state pending">Waiting</span>
+            </div>
+
+            <div id="registerFaceIdCard" class="register-progress-card">
+              <p class="register-progress-name">Face ID</p>
+              <span id="registerFaceIdState" class="register-progress-state pending">Waiting</span>
+            </div>
+          </div>
+
+          <button id="saveBtn" class="mdc-button mdc-button--raised register-save-btn">
+            <span class="mdc-button__label">Save</span>
+          </button>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="../js/pages/register.js"></script>
+</body>
+</html>

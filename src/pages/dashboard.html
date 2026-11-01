@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="logo">GraphicalPass</div>
+      <button id="logoutBtn" class="logout-btn">Log Out</button>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Welcome Back</h1>
+          <p id="welcomeText">You have successfully logged in.</p>
+        </div>
+      </header>
+
+      <section class="overview-cards">
+        <div class="overview-card">
+          <h3>Account Status</h3>
+          <p>Authenticated</p>
+        </div>
+
+        <div class="overview-card">
+          <h3>Security Level</h3>
+          <p id="securityLevelText">High</p>
+        </div>
+
+        <div class="overview-card">
+          <h3>Active Methods</h3>
+          <p id="activeMethodsText">0 Enabled</p>
+        </div>
+      </section>
+
+      <section class="methods-section">
+        <h2>Your Authentication Methods</h2>
+
+        <div class="methods-grid">
+          <div class="method-card">
+            <h3>Gesture Password</h3>
+            <p>Draw or perform a custom hand gesture to unlock access.</p>
+            <span id="gestureStatus" class="status enabled">Enabled</span>
+          </div>
+
+          <div class="method-card">
+            <h3>Facial Motion</h3>
+            <p>Authenticate using selected facial movements and expressions.</p>
+            <span id="faceMotionStatus" class="status enabled">Enabled</span>
+          </div>
+
+          <div class="method-card">
+            <h3>Voice Password</h3>
+            <p>Verify identity using a spoken phrase and voice characteristics.</p>
+            <span id="voiceStatus" class="status enabled">Enabled</span>
+          </div>
+
+          <div class="method-card">
+            <h3>Face ID</h3>
+            <p>Authenticate using facial recognition and live face matching.</p>
+            <span id="faceIdStatus" class="status enabled">Enabled</span>
+          </div>
+          <button id="updateAuthBtn" class="update-auth-btn">
+            Update Authentication Methods
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="../js/pages/dashboard.js"></script>
+</body>
+</html>
