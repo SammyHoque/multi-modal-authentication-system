@@ -42,6 +42,7 @@ docs/FYPSkillsLog_*.pdf
 # Backup and temporary files
 *.bkp
 
-# Private university and research documents
+# Private research and university documents
 docs/ethics/
 docs/Project_Plan_*
+docs/FYPSkillsLog_*.pdf
