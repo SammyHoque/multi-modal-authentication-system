@@ -7,8 +7,8 @@ This guide provides step-by-step instructions to set up and run the Graphical Pa
 Before starting, ensure you have the following installed on your system:
 
 ### Required Software
-- **Node.js** (version 16 or higher) - [Download from nodejs.org](https://nodejs.org/)
-- **Python** (version 3.8 or higher) - [Download from python.org](https://python.org/)
+- **Node.js** (version 18 or higher) - [Download from nodejs.org](https://nodejs.org/)
+- **Python** (version 3.9 or higher) - [Download from python.org](https://python.org/)
 - **PostgreSQL** (version 12 or higher) - [Download from postgresql.org](https://postgresql.org/)
 
 ### Browser Requirements
@@ -33,15 +33,16 @@ pip --version
 
 # Check PostgreSQL (should be running)
 psql --version
+```
 
 ## Project Structure Overview
 
 ```
-mh731/
+multi-modal-authentication-system/
 ├── backend/          # Node.js Express server
 ├── src/             # Frontend HTML/CSS/JS
 ├── python-face-service/  # Python Flask face recognition API
-└── models/          # MediaPipe model files
+└── src/models/       # MediaPipe model files (download separately)
 ```
 
 ## 1. Database Setup
@@ -54,7 +55,7 @@ psql -U postgres
 # Create database (replace 'graphical_auth' with your preferred name)
 CREATE DATABASE graphical_auth;
 
-# Create user (optional, but recommended)
+# Create a database user; use these values in backend/.env below
 CREATE USER auth_user WITH PASSWORD 'your_password_here';
 
 # Grant privileges
@@ -167,30 +168,22 @@ The face service will run on `http://127.0.0.1:5001`
 The frontend consists of static HTML, CSS, and JavaScript files. No build process is required.
 
 ### Required Model Files
-Ensure the MediaPipe model files are present in `src/models/`:
+The MediaPipe model files are excluded from Git and must be downloaded separately. From the repository root, download compatible task models from the official [Gesture Recognizer](https://ai.google.dev/edge/mediapipe/solutions/vision/gesture_recognizer) and [Face Landmarker](https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker) documentation and save them in `src/models/` with these exact names:
 - `gesture_recognizer.task`
 - `face_landmarker.task`
 
 These files are required for gesture and face recognition functionality.
 
 ### Serve Frontend Files
-You can serve the frontend using the backend server (recommended) or a separate static server.
+The backend serves API routes only; it does not serve the frontend files. Run a separate static server from `src/`.
 
-#### Option A: Using Backend (Recommended)
-The backend is configured to serve static files from the `src/` directory. Once the backend is running, access the frontend at:
-- `http://localhost:4000/` (index page)
-- `http://localhost:4000/login.html` (login page)
-- `http://localhost:4000/register.html` (registration page)
-
-#### Option B: Using a Simple HTTP Server
-If you prefer to run the frontend separately:
-
+From the repository root:
 ```bash
 cd src
-python -m http.server 8080
+python3 -m http.server 3000 --bind 127.0.0.1
 ```
 
-Then access at `http://localhost:8080`
+On Windows, use `python` instead of `python3` if that is the Python command installed. Open `http://127.0.0.1:3000/pages/index.html`. The backend CORS configuration allows this exact local origin; other ports, including the usual Live Server defaults, are not currently allowed.
 
 ## 5. Complete System Startup
 
@@ -213,13 +206,13 @@ python app.py
 **Terminal 3 - Frontend (if using separate server):**
 ```bash
 cd src
-python -m http.server 8080
+python3 -m http.server 3000 --bind 127.0.0.1
 ```
 
 ### Verify Services are Running
 - Backend: `http://localhost:4000`
 - Face Service: `http://127.0.0.1:5001/health`
-- Frontend: `http://localhost:4000/` or `http://localhost:8080`
+- Frontend: `http://127.0.0.1:3000/pages/index.html`
 
 ## 5. Testing Individual Services
 
@@ -237,7 +230,7 @@ curl http://127.0.0.1:5001/health
 ```
 
 ### Test Frontend
-Open `http://localhost:4000/` in your browser and check the browser console for errors.
+Open `http://127.0.0.1:3000/pages/index.html` in your browser and check the browser console for errors.
 
 ## 6. Testing the System
 
@@ -257,16 +250,18 @@ Open `http://localhost:4000/` in your browser and check the browser console for 
 - Check if PostgreSQL is running
 - Verify `.env` file exists and has correct values
 - Ensure all npm packages are installed
-- Check if database tables exist (run the SQL schema above)
+- Check the backend output for database connection or table initialization errors
 
 **Face service fails:**
 - Ensure virtual environment is activated
 - Check if all Python packages installed correctly
-- Verify Python version is 3.8+
+- Verify Python version is 3.9+
 - Try installing dlib with conda if pip installation fails
 
 **Frontend not loading:**
-- Confirm backend is running and serving static files
+- Confirm the frontend static server and backend API are both running
+- Open `/pages/index.html` on the frontend server, not the backend root URL
+- Use the documented `127.0.0.1:3000` origin, or add any alternate frontend origin to the backend CORS allowlist
 - Check browser console for JavaScript errors
 - Ensure MediaPipe models are in `src/models/` directory
 - Grant camera/microphone permissions when prompted
@@ -297,8 +292,10 @@ Open `http://localhost:4000/` in your browser and check the browser console for 
 
 ## 8. Security Considerations
 
+- This is an academic prototype, not a production-ready authentication system.
 - Change default passwords and secrets in production
 - Use HTTPS in production
+- The current backend session cookie is configured with `secure: false`; change this before deploying behind HTTPS.
 - Regularly update dependencies
 - Monitor for security vulnerabilities
 
