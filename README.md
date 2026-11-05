@@ -150,6 +150,26 @@ Evaluation focused on how participants interacted with the registration and logi
 
 The system is an academic prototype and should not be treated as a production-ready authentication solution without further security evaluation.
 
+## Dissertation
+
+This project was developed as part of my final year BSc Computer Science degree at the University of Leicester (2025–2026).
+
+My **53-page dissertation**, *Graphical Passwords: Preventing Shoulder Surfing*, documents the research, design, implementation and evaluation of the multi-modal authentication system.
+
+The dissertation covers:
+
+- **Research and Literature Review:** Traditional authentication vulnerabilities, shoulder-surfing attacks, graphical passwords and biometric authentication.
+- **System Design:** Architecture, database structure and authentication workflows.
+- **Implementation:** Development of gesture, facial motion, voice and facial recognition authentication using JavaScript, MediaPipe, Node.js, PostgreSQL and Python.
+- **Testing and Evaluation:** Usability testing with 10 participants, examining user experience and perceived security.
+- **Critical Appraisal:** System limitations, security considerations and potential future improvements.
+
+The evaluation highlighted differences in usability between authentication methods, with gesture authentication presenting greater usability challenges. Formal shoulder-surfing and spoofing attack testing was outside the evaluation scope.
+
+### Read the Full Dissertation
+
+📄 **[Graphical Passwords: Preventing Shoulder Surfing — Dissertation (PDF)](docs/Graphical_Passwords_Dissertation.pdf)**
+
 ## What I Learned
 
 Through this project, I gained practical experience in:
